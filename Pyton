@@ -7,11 +7,17 @@ TOKEN = 'YOUR_BOT_TOKEN'
 GROUP_CHAT_ID = 'YOUR_GROUP_CHAT_ID'
 
 def start(update: Update, context: CallbackContext) -> None:
-    update.message.reply_text('Bot siap menerima pesan!')
+    update.message.reply_text('Bot siap menerima pesan! Kirim pesan untuk diteruskan.')
 
 def forward_message(update: Update, context: CallbackContext) -> None:
+    user_id = update.message.from_user.id
+    message_text = update.message.text
+    
     # Mengirim pesan ke grup
-    context.bot.send_message(chat_id=GROUP_CHAT_ID, text=update.message.text)
+    context.bot.send_message(chat_id=GROUP_CHAT_ID, text=message_text)
+    
+    # Mengirim pesan kembali ke pengguna sebagai chat pribadi
+    context.bot.send_message(chat_id=user_id, text='Pesan Anda telah diteruskan ke grup!')
 
 def main() -> None:
     updater = Updater(TOKEN)
