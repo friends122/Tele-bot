@@ -1,0 +1,27 @@
+from telegram import Update
+from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext
+
+# Ganti dengan token bot kamu
+TOKEN = 'YOUR_BOT_TOKEN'
+# Ganti dengan chat ID grup yang ingin kamu forward
+GROUP_CHAT_ID = 'YOUR_GROUP_CHAT_ID'
+
+def start(update: Update, context: CallbackContext) -> None:
+    update.message.reply_text('Bot siap menerima pesan!')
+
+def forward_message(update: Update, context: CallbackContext) -> None:
+    # Mengirim pesan ke grup
+    context.bot.send_message(chat_id=GROUP_CHAT_ID, text=update.message.text)
+
+def main() -> None:
+    updater = Updater(TOKEN)
+
+    dispatcher = updater.dispatcher
+    dispatcher.add_handler(CommandHandler("start", start))
+    dispatcher.add_handler(MessageHandler(Filters.text & ~Filters.command, forward_message))
+
+    updater.start_polling()
+    updater.idle()
+
+if __name__ == '__main__':
+    main()
